@@ -4,3 +4,14 @@
     Layout = "_Layout";
     ViewData["Title"] = "Обновить пользователя";
 }
+
+@if(Model.Input!=null) {
+    <form asp-page="/Client/Update" method="post">
+        <div asp-validation-summary="All"></div>
+        <input readonly asp-for="@Model.Input.Name" />
+        <input asp-for="@Model.Input.Password" value="@Model.Input.Password" />
+        <input asp-for="@Model.Input.PasswordAgain" value="@Model.Input.PasswordAgain" />
+        <select asp-items="@Model.Countries" asp-for="@Model.Input.Country"/>
+        <input type="submit" value="Обновить" />
+    </form>
+}

@@ -1,17 +1,19 @@
-﻿using Domain.Dto;
-using Service;
+﻿using Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Input;
+using Domain.Dto;
+using SuperProject.Model;
 namespace Domain.Commands
 {
-    public class RegistrationUserCommand : ICommand<UserDTO>
+    public class UpdateCommandService : ICommand<UpdateClient>
     {
         private readonly IRepository _repository;
-        public RegistrationUserCommand(IRepository repository)
+
+        public UpdateCommandService(IRepository repository)
         {
             if (repository == null)
             {
@@ -20,17 +22,16 @@ namespace Domain.Commands
             _repository = repository;
         }
 
-        public void Execute(UserDTO obj)
+        public void Execute(UpdateClient obj)
         {
-            if(obj.Login.Length<3||obj.Password.Length<3)
+            if(!obj.isValidation)
             {
-                return;
+                throw new MissingFieldException();
             }
-            if(_repository.Check(obj.Login))
+            if(!_repository.Update(obj))
             {
-                _repository.Create(obj);
+                throw new InvalidDataException();
             }
-            
         }
     }
 }
