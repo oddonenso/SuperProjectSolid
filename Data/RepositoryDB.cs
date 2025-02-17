@@ -1,5 +1,6 @@
 ﻿using Data.Table;
 using Domain.Dto;
+using SuperProject.Model;
 
 namespace Data;
 
@@ -38,7 +39,21 @@ public class RepositoryDB : Domain.IRepository
         return client == null ? null : Convert(client);
     }
 
-    private UserDTO Convert(Client item) => new UserDTO()
+    public bool Update(UpdateClient client)
+    {
+        var item = _connection.Clients.FirstOrDefault(row=>row.Id== client.Id);
+        if(item == null)
+        {
+            return false;
+        }
+        item.Password = client.Password;
+        item.Country = client.Country;
+        _connection.Update(item);
+        return _connection.SaveChanges()>0;
+
+    }
+
+    private UserDTO Convert(Client item) => item==null ? null: new UserDTO()
     {
         Id = item.Id,
         Login = item.Login,

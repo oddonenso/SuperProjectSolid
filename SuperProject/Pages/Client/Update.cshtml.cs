@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Service;
 using SuperProject.Model;
 using System.Windows.Input;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SuperProject.Pages.Client
 {
@@ -16,7 +17,14 @@ namespace SuperProject.Pages.Client
         private readonly IQueryService<IQuery, UserDTO> _query;
         [BindProperty]
         public UserInDb Input { get; set; }
-
+        public List<SelectListItem> Countries { get; set; } = new List<SelectListItem>()
+        {
+            new SelectListItem("Россия", "Россия"),
+            new SelectListItem("США", "США"),
+            new SelectListItem("Китай", "Китай"),
+            new SelectListItem("Мексика", "Мексика"),
+            new SelectListItem("Канада", "Канада"),
+        };
 
         public UpdateModel(ICommand<UpdateClient> command, IQueryService<IQuery, UserDTO> query)
         {
@@ -40,6 +48,32 @@ namespace SuperProject.Pages.Client
                 Input.PasswordAgain = user.Password;
                 Input.Country = user.Country;
             }
+        }
+
+        public IActionResult OnPost()
+        {
+            if(!ModelState.IsValid)
+            {
+                return Page();
+            }
+            UpdateClient updateClient = new UpdateClient();
+            updateClient.Id = Input.Id;
+            updateClient.Password = Input.Password;
+            updateClient.Country = Input.Country;
+            try
+            {
+                _command.Execute(updateClient);
+                
+            }
+            catch (MissingFieldException error)
+            {
+
+            }
+            catch(InvalidDataException error)
+            {
+                return Page();
+            }
+            return RedirectToPage("/Client/Show");
         }
     }
 }

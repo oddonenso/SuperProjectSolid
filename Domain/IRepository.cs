@@ -1,4 +1,5 @@
 ﻿using Domain.Dto;
+using SuperProject.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace Domain
         bool Check(string login);
         List<UserDTO> GetAll();
         UserDTO GetById(int id);
+        bool Update(UpdateClient client);
     }
 }
